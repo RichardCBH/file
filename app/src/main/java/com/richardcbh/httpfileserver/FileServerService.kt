@@ -214,7 +214,7 @@ class FileServerService : Service() {
                 sb.append("<li><a href=\"/${parentPath}\">.. (返回上级)</a></li>")
             }
 
-            val children = doc.listFiles().sortedBy { !it.isDirectory }
+            val children = (doc.listFiles() ?: emptyArray()).sortedBy { !it.isDirectory }
             for (child in children) {
                 val childPath = if (currentPath.isEmpty()) child.name else "$currentPath/${child.name}"
                 val encodedPath = java.net.URLEncoder.encode(childPath, "UTF-8")
