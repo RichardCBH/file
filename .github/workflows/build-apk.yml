@@ -42,7 +42,7 @@ jobs:
         java -version
 
     - name: Clean and Build Debug APK
-      run: ./gradlew clean assembleDebug --stacktrace --no-daemon
+      run: ./gradlew clean assembleDebug --stacktrace --no-daemon --refresh-dependencies
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
