@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">本地 IPv6 HTTP 文件共享服务器</string>
+    <string name="select_folder">选择共享文件夹</string>
+    <string name="start_server">启动服务器</string>
+    <string name="stop_server">停止服务器</string>
+    <string name="port_hint">端口号 (默认 8080)</string>
+    <string name="status_stopped">服务器已停止</string>
+    <string name="status_running">服务器运行中</string>
+    <string name="web_address">访问地址:</string>
+    <string name="copy_link">复制链接</string>
+    <string name="folder_selected">已选择文件夹:</string>
+    <string name="no_folder_selected">未选择文件夹</string>
+    <string name="ipv6_not_found">未检测到 IPv6 地址，请检查网络设置</string>
+</resources>
