@@ -17,6 +17,7 @@ import androidx.documentfile.provider.DocumentFile
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoHTTPD.IHTTPSession
 import fi.iki.elonen.NanoHTTPD.Response
+import kotlin.text.StringBuilder
 import java.net.Inet6Address
 import java.net.NetworkInterface
 import java.net.URLDecoder
