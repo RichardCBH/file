@@ -15,6 +15,9 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.documentfile.provider.DocumentFile
 import fi.iki.elonen.NanoHTTPD
+import fi.iki.elonen.NanoHTTPD.IHTTPSession
+import fi.iki.elonen.NanoHTTPD.Response
+import java.lang.StringBuilder
 import java.net.Inet6Address
 import java.net.NetworkInterface
 import java.net.URLDecoder
@@ -111,24 +114,22 @@ class FileServerService : Service() {
 
     private fun getDeviceIPv6Address(): String? {
         try {
-            val interfaces = NetworkInterface.getNetworkInterfaces().toList()  // Convert to list to iterate multiple times
-            
-            // First pass: prefer global unicast (non site-local)
+            val interfaces = NetworkInterface.getNetworkInterfaces().toList()
+
             for (intf in interfaces) {
                 if (intf.isLoopback || !intf.isUp) continue
                 val addresses = intf.inetAddresses.toList()
                 for (addr in addresses) {
-                    if (addr is Inet6Address && 
-                        !addr.isLoopbackAddress && 
-                        !addr.isLinkLocalAddress && 
+                    if (addr is Inet6Address &&
+                        !addr.isLoopbackAddress &&
+                        !addr.isLinkLocalAddress &&
                         !addr.isSiteLocalAddress) {
                         val hostAddress = addr.hostAddress
                         return hostAddress?.substringBefore('%')
                     }
                 }
             }
-            
-            // Fallback: any non-link-local IPv6 (site-local is ok for LAN)
+
             for (intf in interfaces) {
                 if (intf.isLoopback || !intf.isUp) continue
                 val addresses = intf.inetAddresses.toList()
@@ -151,7 +152,6 @@ class FileServerService : Service() {
         Log.d("FileServerService", "Server stopped")
     }
 
-    // Simple HTTP Server using NanoHTTPD
     private class HttpFileServer(
         private val context: Context,
         hostname: String,
@@ -209,7 +209,6 @@ class FileServerService : Service() {
 <ul>
 """)
 
-            // Parent directory link
             if (currentPath.isNotEmpty()) {
                 val parentPath = currentPath.substringBeforeLast('/', "")
                 sb.append("<li><a href=\"/${parentPath}\">.. (返回上级)</a></li>")
