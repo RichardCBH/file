@@ -111,33 +111,28 @@ class FileServerService : Service() {
 
     private fun getDeviceIPv6Address(): String? {
         try {
-            val interfaces = NetworkInterface.getNetworkInterfaces()
-            while (interfaces.hasMoreElements()) {
-                val intf = interfaces.nextElement()
-                // Prefer WiFi or mobile interfaces
+            val interfaces = NetworkInterface.getNetworkInterfaces().toList()  // Convert to list to iterate multiple times
+            
+            // First pass: prefer global unicast (non site-local)
+            for (intf in interfaces) {
                 if (intf.isLoopback || !intf.isUp) continue
-
-                val addresses = intf.inetAddresses
-                while (addresses.hasMoreElements()) {
-                    val addr = addresses.nextElement()
+                val addresses = intf.inetAddresses.toList()
+                for (addr in addresses) {
                     if (addr is Inet6Address && 
                         !addr.isLoopbackAddress && 
                         !addr.isLinkLocalAddress && 
                         !addr.isSiteLocalAddress) {
                         val hostAddress = addr.hostAddress
-                        // Remove scope id if present
                         return hostAddress?.substringBefore('%')
                     }
                 }
             }
-            // Fallback: any non-link-local IPv6
-            interfaces.reset()
-            while (interfaces.hasMoreElements()) {
-                val intf = interfaces.nextElement()
+            
+            // Fallback: any non-link-local IPv6 (site-local is ok for LAN)
+            for (intf in interfaces) {
                 if (intf.isLoopback || !intf.isUp) continue
-                val addresses = intf.inetAddresses
-                while (addresses.hasMoreElements()) {
-                    val addr = addresses.nextElement()
+                val addresses = intf.inetAddresses.toList()
+                for (addr in addresses) {
                     if (addr is Inet6Address && !addr.isLoopbackAddress && !addr.isLinkLocalAddress) {
                         return addr.hostAddress?.substringBefore('%')
                     }
