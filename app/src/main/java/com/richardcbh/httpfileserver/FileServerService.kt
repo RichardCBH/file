@@ -171,7 +171,7 @@ class FileServerService : Service() {
                     val targetDoc = findDocumentFile(rootDoc, relativePath)
 
                     if (targetDoc == null) {
-                        newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "404 Not Found")
+                        newFixedLengthResponse(Response.Status.NOT_FOUND, NanoHTTPD.MIME_PLAINTEXT, "404 Not Found")
                     } else if (targetDoc.isDirectory) {
                         serveDirectoryListing(targetDoc, relativePath)
                     } else {
@@ -180,7 +180,7 @@ class FileServerService : Service() {
                 }
             } catch (e: Exception) {
                 Log.e("HttpFileServer", "Error serving request", e)
-                newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_PLAINTEXT, "Server Error: ${e.message}")
+                newFixedLengthResponse(Response.Status.INTERNAL_ERROR, NanoHTTPD.MIME_PLAINTEXT, "Server Error: ${e.message}")
             }
         }
 
@@ -232,7 +232,7 @@ class FileServerService : Service() {
         private fun serveFile(doc: DocumentFile): Response {
             val mimeType = getMimeType(doc.name ?: "")
             val inputStream = context.contentResolver.openInputStream(doc.uri)
-                ?: return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "File not accessible")
+                ?: return newFixedLengthResponse(Response.Status.NOT_FOUND, NanoHTTPD.MIME_PLAINTEXT, "File not accessible")
 
             val fileName = doc.name ?: "download"
             val response = newChunkedResponse(Response.Status.OK, mimeType, inputStream)
