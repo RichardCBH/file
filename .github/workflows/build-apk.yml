@@ -27,6 +27,14 @@ jobs:
       with:
         gradle-home-cache-cleanup: true
 
+    - name: Ensure Gradle wrapper is present
+      run: |
+        if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+          echo "gradle-wrapper.jar is missing. Regenerating wrapper..."
+          gradle wrapper --gradle-version 8.7 --distribution-type bin
+          chmod +x ./gradlew
+        fi
+
     - name: Show environment info
       run: |
         ./gradlew --version
